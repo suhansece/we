@@ -1,0 +1,136 @@
+/* App.css */
+body{
+ width: 340px;
+ margin: 0;
+ padding: 0;
+}
+.calendar {
+  font-family: Arial, sans-serif;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 10px;
+}
+
+.days div {
+  padding: 5px;
+  text-align: center;
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  
+}
+
+.date {
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.today {
+  background-color: lightblue;
+  
+}
+
+.special {
+  background-color: lightcoral;
+}
+
+.empty {
+  visibility: hidden;
+}
+
+
+/* App.css */
+
+/* App.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-date {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.add-date input {
+  padding: 12px; /* Increase padding to increase height */
+  height: 40px; /* Increase height */
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 20px;
+}
+
+.add-date button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-date button:hover {
+  background-color: #0056b3;
+}
+
+/* nav */
+
+.nav{
+  height: 50px;
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  background-color: violet;
+  font-family:Comic Sans MS, Comic Sans, cursive;
+}
+
+.box{
+  margin-top: 30px;
+  border: 1px solid #ccc;
+  min-height: 100px;
+  min-width: 300px;
+  border-radius: 4px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 8px;
+}
+h1{
+  font-size: 20px;
+}
+
+/* Button */
+.se-btn{
+  margin-top: 20px;
+  display: flex;
+}
+.se-btn button{
+  width: 90px;
+  margin: 20px;
+  height: 30px;
+  border-radius: 8px;
+  color: white;
+  background-color:#007bff;
+  font-size: 15px;
+  border: 0;
+}
