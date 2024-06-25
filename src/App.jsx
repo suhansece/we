@@ -1,19 +1,24 @@
-import { useEffect, useState } from 'react';
-import './App.css'; // Import CSS for styling
+import { useEffect, useState } from "react";
+import "./App.css"; // Import CSS for styling
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faPlus } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
+import {
+  faChevronLeft,
+  faChevronRight,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { render } from "react-dom";
 
 const App = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [specialDates, setSpecialDates] = useState([]);
   const [newDate, setNewDate] = useState([]);
   const [selectedDay, setSelectedDay] = useState(null); // State to track selected day
-  const [inputValue, setInputValue] = useState(''); // State for input box value
+  const [inputValue, setInputValue] = useState(""); // State for input box value
 
   // Function to navigate to the previous month
   const prevMonth = () => {
-    setCurrentDate(prevDate => {
+    setCurrentDate((prevDate) => {
       const prevMonthDate = new Date(prevDate);
       prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
       return prevMonthDate;
@@ -21,7 +26,7 @@ const App = () => {
   };
 
   const nextMonth = () => {
-    setCurrentDate(prevDate => {
+    setCurrentDate((prevDate) => {
       const nextMonthDate = new Date(prevDate);
       nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
       return nextMonthDate;
@@ -30,8 +35,8 @@ const App = () => {
 
   const handleAddDate = async () => {
     try {
-      await axios.put('api/addevent', { message: inputValue });
-      setInputValue('');
+      await axios.put("api/addevent", { message: inputValue });
+      setInputValue("");
     } catch (e) {
       console.log(e);
     }
@@ -47,10 +52,9 @@ const App = () => {
     for (let i = 1; i <= daysInMonth + firstDayIndex; i++) {
       if (i > firstDayIndex) {
         const day = i - firstDayIndex;
-        const isSpecial = isSpecialDate(month, day, year);
+        const isSpecial = isSpecialDate(month + 1, day, year);
         const specialSymbol = getSpecialSymbol(month, day);
         days.push({ day, isSpecial, specialSymbol });
-        
       } else {
         days.push(null);
       }
@@ -61,12 +65,26 @@ const App = () => {
 
   const isToday = (day) => {
     const today = new Date();
-    return currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear() && day === today.getDate();
+    return (
+      currentDate.getMonth() === today.getMonth() &&
+      currentDate.getFullYear() === today.getFullYear() &&
+      day === today.getDate()
+    );
   };
 
   const isSpecialDate = (month, day, year) => {
-    return specialDates.some(date => date.month === month && date.day === day && date.year === year);
+    const specialDate = specialDates.find((date) => {
+      const a = date.Date.split("/");
+      return (
+        Number(a[0]) === month &&
+        Number(a[1]) === day &&
+        Number(a[2].substring(0, 4)) === year
+      );
+    });
+  
+    return specialDate ? {"type":specialDate.type,"message":specialDate.message} : ""; 
   };
+  
 
   const getSpecialSymbol = (month, day) => {
     if (month === 0 && day === 27) {
@@ -78,22 +96,20 @@ const App = () => {
   };
 
   const handleDateClick = (day) => {
-    setSelectedDay(day === selectedDay ? null : day);
+    setSelectedDay(day === selectedDay ? null :day.isSpecial.message);
   };
 
   const handleStartButtonClick = async () => {
-   
     try {
-      await axios.put('api/addstart');
+      await axios.put("api/addstart");
     } catch (e) {
       console.log(e);
     }
   };
 
   const handleEndButtonClick = async () => {
-   
     try {
-      await axios.put('api/addend');
+      await axios.put("api/addend");
     } catch (e) {
       console.log(e);
     }
@@ -102,70 +118,56 @@ const App = () => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  const addSpecial = () => {
-   
-  
-    const updatedSpecialDates = [...specialDates]; // Create a copy of the current special dates
-  
-    newDate.forEach(date => {
-      const temp = date.Date.substring(0, 10).split("/");
-      const k = {
-        month: parseInt(temp[0])-1,
-        day: parseInt(temp[1]),
-        year: parseInt(temp[2])
-      };
-      updatedSpecialDates.push(k);  
 
-    });
-
-    setSpecialDates(updatedSpecialDates); 
-  };
   useEffect(() => {
     const get = async () => {
-      const data = await axios.get('api/dates');
-      setNewDate(data.data[0].dates);
-      
+      const data = await axios.get("api/dates");
+      setSpecialDates(data.data);
     };
     get();
   }, []);
-  
-  // Re-run addSpecial whenever newDate changes
-  useEffect(() => {
-    if (newDate.length > 0) {
-      addSpecial();
-    }
-  }, [newDate]);
-  
-  // Add specialDates as a dependency to useEffect to re-render when it changes
-  useEffect(() => {
-    // Your code for rendering the calendar div
-  }, [specialDates]);
 
   return (
     <div className="container">
-      <div className='nav'>
-        Every Thing About Us
-      </div>
-     <div className="calendar">
+      <div className="nav">Every Thing About Us</div>
+      <div className="calendar">
         <div className="header">
-          <button onClick={prevMonth}><FontAwesomeIcon icon={faChevronLeft} /></button>
-          <h2>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-          <button onClick={nextMonth}><FontAwesomeIcon icon={faChevronRight} /></button>
+          <button onClick={prevMonth}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
+          <h2>
+            {currentDate.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            })}
+          </h2>
+          <button onClick={nextMonth}>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
         </div>
         <div className="days">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day}>{day}</div>
           ))}
         </div>
         <div className="dates">
-  {getDaysInMonth().map((item, index) => (
-    <div key={index} className={item ? (isToday(item.day) ? 'date today' : (item.isSpecial ? 'date special' : 'date')) : 'empty'}
-      onClick={() => handleDateClick(item.day)}>
-      {item ? (item.specialSymbol ? item.specialSymbol : item.day) : ''}
-    </div>
-  ))}
-</div>
-
+          {specialDates.length > 0 &&
+            getDaysInMonth().map((item, index) => (
+              <div
+                key={index}
+                className={
+                  item ? isToday(item.day)? "date today": item.isSpecial ? (item.isSpecial.type==="Start"?"Start":item.isSpecial.type==="End"?"End":"date"): "date": "sum"
+                }
+                onClick={() => handleDateClick(item)}
+              >
+                {item
+                  ? item.specialSymbol
+                    ? item.specialSymbol
+                    : item.day
+                  : ""}
+              </div>
+            ))}
+        </div>
       </div>
 
       {selectedDay && (
@@ -174,16 +176,18 @@ const App = () => {
         </div>
       )}
       <div className="add-date">
-        <h1>New Special</h1>
+        <h1>Today Memories</h1>
         <input
           type="text"
           placeholder="Your thoughts"
           value={inputValue} // Bind input box value to state
           onChange={handleInputChange} // Handle input change
         />
-        <button onClick={handleAddDate}><FontAwesomeIcon icon={faPlus} /> Add</button>
+        <button onClick={handleAddDate}>
+          <FontAwesomeIcon icon={faPlus} /> Add
+        </button>
       </div>
-      <div className='se-btn'>
+      <div className="se-btn">
         <button onClick={handleStartButtonClick}>Start</button>
         <button onClick={handleEndButtonClick}>End</button>
       </div>
