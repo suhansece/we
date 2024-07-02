@@ -14,3 +14,5 @@ export default defineConfig({
     },
   },
 })
+
+// target: "https://we-server-0tom.onrender.com/",

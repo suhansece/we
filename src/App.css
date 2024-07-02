@@ -3,6 +3,8 @@ body{
  width: 340px;
  margin: 0;
  padding: 0;
+ position: relative;
+ margin: auto;
 }
 .calendar {
   font-family: Arial, sans-serif;
@@ -146,4 +148,27 @@ h1{
   background-color:#007bff;
   font-size: 15px;
   border: 0;
+}
+/* Add these styles to App.css */
+
+/* Common button styles */
+.se-btn button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Style for active buttons */
+.se-btn button:enabled {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Style for disabled buttons */
+.se-btn button:disabled {
+  background-color: #f0f0f0;
+  color: #aaa;
+  cursor: not-allowed;
 }
