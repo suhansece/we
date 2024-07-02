@@ -36,7 +36,7 @@ const App = () => {
 
   const handleAddDate = async () => {
     try {
-      await axios.put("https://we-server-0tom.onrender.com/api/addevent", { message: inputValue });
+      await axios.put("api/addevent", { message: inputValue });
       setInputValue("");
       setUpdate(()=>update+1);
     } catch (e) {
